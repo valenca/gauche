@@ -14,16 +14,16 @@ GEO = {
 }[argv[1]]
 
 def runProcess(exe):
-    p = Popen(exe.split(" "), stdout=PIPE, stderr=STDOUT)
+    p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
     while(True):
-        retcode = p.poll() #returns None while subprocess is running
+        retcode = p.poll()
         line = p.stdout.read()
         yield line
         if(retcode is not None):
             break
                                             
 def call(exe):
-    print("CMD \'" + exe + "\':")
+    print("CMD \'%s\':" % exe)
     ret = next(runProcess(exe)).decode('utf-8').strip("\n")
     print(ret.split("\n"))
     return ret
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     w = call("xdotool getwindowfocus")
     l = call("xdotool getwindowgeometry %s" % w)
-    w,p,g = l.split("\n")
+    w, p, g = l.split("\n")
 
     w = int(w.split()[1])
     p = relativeP(tuple(map(int, p.split()[1].split(','))))
@@ -65,10 +65,10 @@ if __name__ == "__main__":
 
     print k
 
-    t = closeEnough(k,GEO)
+    t = closeEnough(k, GEO)
 
     if t == -1:
-        print("gravity not found, defaulting to" + str(GEO[0]))
+        print("gravity not found, defaulting to %s" % str(GEO[0]))
         k = GEO[0]
     else:
         print("gravity found!")
