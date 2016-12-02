@@ -1,11 +1,12 @@
 #!/usr/bin/env python
  
-from subprocess import *
+from subprocess import Popen,PIPE,STDOUT
 from sys import argv 
-from math import floor,ceil
+from math import floor
+from time import sleep
+from operator import sub
 
-d = (1600,900)  #size of my monitor
-o = (  10, 80)  #coords measured at the top left of the screen
+o = (1006,1107)  #coords measured at the top left of the screen
 
 GEO = {
         "video_top"   :[(68, 0,32,33),(80, 0,20,21),(50, 0,50,50)],
@@ -38,9 +39,20 @@ def relativeG(x):
  
 def absoluteG(x):
    return x[0]*d[0]/100,x[1]*d[1]/100
-        
+
+def closeEnough(x, y):
+    for i in range(len(y)):
+        c = max(map(abs,map(sub,x,y[i])))
+        if c < 10:
+            return i
+    return -1
+
 if __name__ == "__main__":
- 
+
+    d = call("xdotool getdisplaygeometry")
+    
+    d = list(map(int,d.split()))
+
     w = call("xdotool getwindowfocus")
     l = call("xdotool getwindowgeometry %s" % w)
     w,p,g = l.split("\n")
@@ -51,22 +63,24 @@ if __name__ == "__main__":
  
     k=p+g
  
-    k=tuple(map(floor,k))
- 
-    print(k)
+    k=tuple(map(int,map(floor,k)))
 
-    if k in GEO:
-         print("gravity found!")
-         k = GEO[(GEO.index(k)+1) % len(GEO)]
-    else:
-        print("gravity not found :(")
+    print k
+
+    t = closeEnough(k,GEO)
+
+    if t==-1:
+        print("gravity not found :(, setting to" + str(GEO[0]))
         k = GEO[0]
+    else:
+        print("gravity found!")
+        k = GEO[(t+1) % len(GEO)]
 
     p = absoluteP(k[:2])
     g = absoluteG(k[2:])
  
-    l = call("xdotool windowsize %d %d%% %d%%" % (w,k[2],k[3]))
-    l = call("xdotool windowmove %d %d%% %d%%" % (w,k[0],k[1]))
-    l = call("xdotool mousemove %d %d" % (-o[0]+p[0]+g[0]//2, 25-o[1]+p[1]+g[1]//2))
-
+    l = call("xdotool windowsize %d %d %d --sync" % (w,g[0],g[1]))
+    l = call("xdotool windowmove %d %d %d --sync" % (w,p[0],p[1]))
+    sleep(0.02)
+    l = call("xdotool mousemove --sync --window %s %d %d" % (w,g[0]//2, g[1]//2))
 
