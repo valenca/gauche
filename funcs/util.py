@@ -1,5 +1,6 @@
 from subprocess import Popen,PIPE,STDOUT
-from funcs.gravity import *
+from math import sqrt
+
 
 def runProcess(exe):
     p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
@@ -16,3 +17,5 @@ def call(exe):
     print(ret.split("\n"))
     return ret
 
+def dist(x1, x2, y1, y2):
+    return sqrt((x1-x2)**2+(y1-y2)**2)

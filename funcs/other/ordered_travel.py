@@ -3,7 +3,7 @@ from itertools import groupby
 from funcs.util import *
 
 
-def travel(d):
+def travel2(d):
     d = {
             "left"  : (1,  True),
             "right" : (1, False),
@@ -20,11 +20,9 @@ def travel(d):
 
     c = int(call("xdotool getwindowfocus"))
 
-    if c in l:
-        l.remove(c)
+    if c not in l:
+        l.append(c)
 
-    c = [-1] + list(map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]))
-    
     a = []
     for w in l:
         o = call("xdotool getwindowgeometry %d" % w)
@@ -32,21 +30,20 @@ def travel(d):
         p = tuple(map(int, o[1].split()[1].split(",")))
         g = tuple(map(int, o[2].split()[1].split("x")))
         
-        a.append([w, p[0]+(g[0]//2), p[1]+(g[1]//2)])
-        
+        a.append((w, p[0]+(g[0]//2), p[1]+(g[1]//2)))
+    
         if w == c:
             c = a[-1]
 
-    for i in range(len(a)):
-        a[i].append(dist(c[1],a[i][1],c[2],a[i][2]))
+    s=[]
+    for k,v in groupby(sorted(a, key = itemgetter(d[0]), reverse=d[1]), itemgetter(d[0])):
+        s.append((k, list(v)))
+ 
+    for i in range(len(s)):
+        if c[d[0]] == s[i][1][0][d[0]]:
+            break
+
+    if i + 1 < len(s):
+        c = s[(i + 1) % len(s)][1][0]
     
-    a.sort(key=itemgetter(3))
-   
-    for i in range(len(a)):
-        if abs(a[i][d[0]] - c[d[0]]) < 5: # Rounding threshold
-            continue
-        if (a[i][d[0]] > c[d[0]]) != d[1]:
-            call("xdotool mousemove %d %d" % tuple(a[i][1:3]))
-            break 
-
-
+    call("xdotool mousemove %d %d"% c[1:])
