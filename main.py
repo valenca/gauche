@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+#   For best performance remove window titles.
+#   Install devilspie with the script: 
+# 
+#   (if (matches (application_name) ".*") (begin (undercorate)))
+#
+#   And run it on the background
+
+
 from sys import argv
 from funcs.gravity import *
 from funcs.travel import *
@@ -14,9 +22,11 @@ GEO = {
         "right"       :[(50,  0, 50,100), (67,  0, 33,100), (33,  0, 67,100)]
 }
 
+OFF = (0,25)
+
 if __name__ == "__main__":
     if argv[1] == "gravity":
-        gravity(GEO[argv[2]])
+        gravity(GEO[argv[2]],OFF)
         quit()
     if argv[1] == "travel":
         travel(argv[2])

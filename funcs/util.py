@@ -1,7 +1,6 @@
 from subprocess import Popen,PIPE,STDOUT
 from math import sqrt
 
-
 def runProcess(exe):
     p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
     while(True):

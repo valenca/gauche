@@ -1,5 +1,6 @@
 from operator import itemgetter
 from itertools import groupby
+
 from funcs.util import *
 
 def travel(d):
