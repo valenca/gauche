@@ -1,6 +1,8 @@
 from subprocess import Popen,PIPE,STDOUT
 from math import sqrt
 
+DEBUG = False
+
 def runProcess(exe):
     p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
     while(True):
@@ -9,12 +11,14 @@ def runProcess(exe):
         yield line
         if(retcode is not None):
             break
- 
-def call(exe):
-    print("CMD \'%s\':" % exe)
-    ret = next(runProcess(exe)).decode('utf-8').strip("\n")
-    print(ret.split("\n"))
-    return ret
 
+def call(exe):
+    if(DEBUG):
+        print("CMD \'%s\':" % exe)
+        ret = next(runProcess(exe)).decode('utf-8').strip("\n")
+        print(ret.split("\n"))
+        return ret
+    else:
+        return next(runProcess(exe)).decode('utf-8').strip("\n")
 def dist(x1, x2, y1, y2):
     return sqrt((x1-x2)**2+(y1-y2)**2)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #   For best performance remove window titles.
 #   Install devilspie with the script: 
@@ -8,6 +8,7 @@
 #   And run it on the background
 
 
+import re
 from sys import argv
 from funcs.gravity import *
 from funcs.travel import *
@@ -22,11 +23,13 @@ GEO = {
         "right"       :[(50,  0, 50,100), (67,  0, 33,100), (33,  0, 67,100)]
 }
 
-OFF = (0,25)
+OFF = tuple(map(int,re.search("\+\d*\+\d*",call("xrandr").split("\n")[1]).group().split("+")[1:]))
+
+BAR = (   0,  25)
 
 if __name__ == "__main__":
     if argv[1] == "gravity":
-        gravity(GEO[argv[2]],OFF)
+        gravity(GEO[argv[2]],OFF, BAR)
         quit()
     if argv[1] == "travel":
         travel(argv[2])

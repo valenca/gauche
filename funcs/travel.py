@@ -14,10 +14,10 @@ def travel(d):
     n = call("xdotool get_desktop")
     o = call("wmctrl -l").split("\n")
 
-    o = [x.split() for x in o]
+    o = [x.split() for x in o ]
 
     l = [int(x[0],0) for x in o if x[1] == n]
-
+    
     c = int(call("xdotool getwindowfocus"))
 
     m = [-1] + list(map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]))

@@ -1,6 +1,6 @@
 from math import floor
 from time import sleep
-from operator import sub
+from operator import sub,add
 
 from funcs.util import *
 
@@ -24,11 +24,11 @@ def closeEnough(x, y):
             return i
     return -1
 
-def gravity(GEO, OFF):
-    o = OFF
+def gravity(GEO, OFF, BAR):
+    o = tuple(map(add,OFF,BAR))
 
     d = call("xdotool getdisplaygeometry")
-    d = list(map(int, d.split()))
+    d = list(map(sub,map(int, d.split()), BAR))
 
     w = call("xdotool getwindowfocus")
     l = call("xdotool getwindowgeometry %s" % w)
