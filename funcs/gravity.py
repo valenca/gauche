@@ -51,6 +51,5 @@ def gravity(GEO, OFF, BAR):
     last = call("xdotool windowsize %d %d %d --sync" % (window, geo[0], geo[1]))
     last = call("xdotool windowmove %d %d %d --sync" % (window, pos[0], pos[1]))
     sleep(0.01)
-    sleep(0.01)
     last = call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
 

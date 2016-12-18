@@ -7,14 +7,13 @@
 #
 #   And run it on the background
 
-
 import re
 from sys import argv
+
 from funcs.gravity import *
 from funcs.travel import *
 from funcs.split import *
 from funcs.util import *
-
 
 GEO = {
         "video_top"   :[(68,  0, 32, 33), (80,  0, 20, 21), (50,  0, 50, 50)],
@@ -31,12 +30,36 @@ OFF = tuple(map(int,re.search("\+\d*\+\d*",call("xrandr").split("\n")[1]).group(
 BAR = (   0,  25)
 
 if __name__ == "__main__":
-    if argv[1] == "gravity":
-        gravity(GEO[argv[2]], OFF, BAR)
-        quit()
-    if argv[1] == "travel":
-        travel(argv[2])
-        quit()
-    if argv[1] == "split":
-        split(argv[2], OFF, BAR)
-        quit()
+    try:
+        if argv[1] == "gravity":
+            try:
+                gravity(GEO[argv[2]], OFF, BAR)
+            except IndexError:
+                print("No gravity given. Must be one of these values:\n" + str(list(GEO.keys())))
+            except KeyError:
+                print("Gravity not supported. Must be one of these values:\n" + str(list(GEO.keys())))
+            quit()
+
+        if argv[1] == "travel":
+            try:
+                travel(argv[2])
+            except IndexError:
+                print("No travel direction given. Must be one of these values:\n" + str(["up","down","left","right"]))
+            except KeyError:
+                print("Travel direction not supported. Must be one of these values:\n" + str(["up","down","left","right"]))
+            quit()
+
+        if argv[1] == "split":
+            try:
+                split(argv[2], OFF, BAR)
+            except IndexError:
+                print("No direction given. Must be one of " + str(["horizontal","vertical"]) + ".")
+            except KeyError:
+                print("Invalid argument. Must be one of " + str(["horizontal","vertical"]) + ".")
+            quit()
+        raise KeyError
+
+    except IndexError:
+        print("No function given. Must be one of " + str(["gravity", "travel", "split"]))
+    except KeyError:
+        print("Function not supported. Must be one of " + str(["gravity", "travel", "split"]))
