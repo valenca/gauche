@@ -24,9 +24,9 @@ def closeEnough(x, y):
             return i
     return -1
 
-def gravity(GEO, OFF, BAR):
-    offset = tuple(map(add,OFF,BAR))
-    display = list(map(sub,map(int, call("xdotool getdisplaygeometry").split()), BAR))
+def gravity(GEO):
+    
+    display,offset = getWorkingArea()
     window, pos, geo = call("xdotool getwindowgeometry %s" % call("xdotool getwindowfocus")).split("\n")
     
     window = int(window.split()[1])
@@ -47,9 +47,6 @@ def gravity(GEO, OFF, BAR):
     pos = absoluteP(grav[:2], display, offset)
     geo = absoluteG(grav[2:], display, offset)
  
-
-    last = call("xdotool windowsize %d %d %d --sync" % (window, geo[0], geo[1]))
-    last = call("xdotool windowmove %d %d %d --sync" % (window, pos[0], pos[1]))
-    sleep(0.01)
+    last = call("wmctrl -i -r %d -e 0,%d,%d,%d,%d" % (window, pos[0], pos[1], geo[0], geo[1]))
     last = call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
 

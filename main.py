@@ -9,6 +9,7 @@
 
 import re
 from sys import argv
+from operator import itemgetter
 
 from funcs.gravity import *
 from funcs.travel import *
@@ -25,15 +26,14 @@ GEO = {
         "column"      :[(92,  0,  8,100)]
 }
 
-OFF = tuple(map(int,re.search("\+\d*\+\d*",call("xrandr").split("\n")[1]).group().split("+")[1:]))
-
-BAR = (   0,  25)
+#OFF = tuple(map(int,re.search("\+\d*\+\d*",call("xrandr").split("\n")[1]).group().split("+")[1:]))
+#BAR = (   0,  25)
 
 if __name__ == "__main__":
     try:
         if argv[1] == "gravity":
             try:
-                gravity(GEO[argv[2]], OFF, BAR)
+                gravity(GEO[argv[2]])
             except IndexError:
                 print("No gravity given. Must be one of these values:\n" + str(list(GEO.keys())))
             except KeyError:
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
         if argv[1] == "split":
             try:
-                split(argv[2], OFF, BAR)
+                split(argv[2])
             except IndexError:
                 print("No direction given. Must be one of " + str(["horizontal","vertical"]) + ".")
             except KeyError:

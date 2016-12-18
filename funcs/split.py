@@ -22,10 +22,9 @@ def bottom(window, display, offset):
 def closeEnough(x, y):
     return abs(x-y) < 3
 
-def split(DIM, OFF, BAR):
-    offset = tuple(map(add,OFF,BAR))
-    display = list(map(sub,map(int, call("xdotool getdisplaygeometry").split()), BAR))
-    mouse = list(map(add,map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]),BAR))
+def split(DIM):
+    display,offset = getWorkingArea()
+    mouse = list(map(add,map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]),offset))
     desktop_n = call("xdotool get_desktop")
     all_windows = [int(x[0],0) for x in [x.split() for x in call("wmctrl -l").split("\n")] if x[1] == desktop_n]
 
@@ -46,14 +45,12 @@ def split(DIM, OFF, BAR):
             # Check if window is aligned to the left:
             if left(window, display, offset):
                 print("%d is left-aligned, adjusting width" % window[0])
-                call("xdotool windowsize %d %d %d --sync" % (window[0], mouse[0], display[1]))
-                call("xdotool windowmove %d %d %d --sync" % (window[0], offset[0], offset[1]))
+                call("wmctrl -i -r %s -e 0,-1,-1,%d,-1" % (window[0], mouse[0]))
                 continue 
             # Check if window is aligned to the right:
             if right(window, display, offset):
                 print("%d is right-aligned, adjusting width" % window[0])
-                call("xdotool windowsize %d %d %d --sync" % (window[0], display[0] - mouse[0], display[1]))
-                call("xdotool windowmove %d %d %d --sync" % (window[0], mouse[0], offset[1]))
+                call("wmctrl -i -r %s -e 0,%d,-1,%d,-1" % (window[0], mouse[0], display[0] - mouse[0]))
                 continue
         return 
     elif DIM == "horizontal":
@@ -66,14 +63,12 @@ def split(DIM, OFF, BAR):
             # Check if window is aligned to the top:
             if top(window, display, offset):
                 print("%d is top-aligned, adjusting height" % window[0])
-                call("xdotool windowsize %d %d %d --sync" % (window[0], display[0], (mouse[1] - 2 * offset[1])))
-                call("xdotool windowmove %d %d %d --sync" % (window[0], offset[0], offset[1]))
+                call("wmctrl -i -r %s -e 0,-1,-1,-1,%d" % (window[0], (mouse[1] - 2 * offset[1])))
                 continue 
             # Check if window is aligned to the bottom:
             if bottom(window, display, offset):
                 print("%d is bottom-aligned, adjusting height" % window[0])
-                call("xdotool windowsize %d %d %d --sync" % (window[0], display[0], display[1] - (mouse[1] - 2 * offset[1])))
-                call("xdotool windowmove %d %d %d --sync" % (window[0], offset[0], mouse[1] - offset[1]))
+                call("wmctrl -i -r %s -e 0,-1,%d,-1,%d" % (window[0], mouse[1] - offset[1], display[1] - (mouse[1] - 2 * offset[1])))
                 continue
         return 
     raise(KeyError)
