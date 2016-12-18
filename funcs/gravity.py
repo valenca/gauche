@@ -20,13 +20,13 @@ def absoluteG(x, display, offset):
 def closeEnough(x, y):
     for i in range(len(y)):
         c = max(map(abs, map(sub, x, y[i])))
-        if c < 10:
+        if c < 5:
             return i
-    return -1
+    return None
 
 def gravity(GEO):
-    
-    display,offset = getWorkingArea()
+
+    display, offset = getWorkingArea()
     window, pos, geo = call("xdotool getwindowgeometry %s" % call("xdotool getwindowfocus")).split("\n")
     
     window = int(window.split()[1])
@@ -35,14 +35,12 @@ def gravity(GEO):
  
     grav = tuple(map(int, map(round, pos + geo)))
 
-    tog = closeEnough(grav, GEO)
-
-    if tog == -1:
+    try:
+        grav = GEO[(closeEnough(grav, GEO) + 1) % len(GEO)]
+        print("gravity found, setting to %s" % str(grav))
+    except TypeError:
         grav = GEO[0]
         print("gravity not found, defaulting to %s" % str(grav))
-    else:
-        grav = GEO[(tog + 1) % len(GEO)]
-        print("gravity found, setting to %s" % str(grav))
 
     pos = absoluteP(grav[:2], display, offset)
     geo = absoluteG(grav[2:], display, offset)

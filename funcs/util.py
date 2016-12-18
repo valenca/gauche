@@ -2,7 +2,7 @@ from subprocess import Popen,PIPE,STDOUT
 from math import sqrt
 from operator import add
 
-DEBUG = False
+DEBUG = True
 
 def runProcess(exe):
     p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
@@ -33,3 +33,12 @@ def getWorkingArea():
     BAR = tuple(map(int,BAR.split(",")))
 
     return SCR, tuple(map(add,OFF,BAR))
+
+def getMousePosition():
+    return list(map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]))
+
+def getCurrentWindow():
+    return int(call("xdotool getwindowfocus"))
+
+def getAllDesktopWindows():
+    return [int(x[0],0) for x in [x.split() for x in call("wmctrl -l").split("\n")] if (x[1] == call("xdotool get_desktop") or x[3][:3] == "[*]")]

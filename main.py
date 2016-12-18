@@ -14,6 +14,7 @@ from operator import itemgetter
 from funcs.gravity import *
 from funcs.travel import *
 from funcs.split import *
+from funcs.stick import *
 from funcs.util import *
 
 GEO = {
@@ -25,9 +26,6 @@ GEO = {
         "right"       :[(50,  0, 50,100), (67,  0, 33,100), (33,  0, 67,100)],
         "column"      :[(92,  0,  8,100)]
 }
-
-#OFF = tuple(map(int,re.search("\+\d*\+\d*",call("xrandr").split("\n")[1]).group().split("+")[1:]))
-#BAR = (   0,  25)
 
 if __name__ == "__main__":
     try:
@@ -57,9 +55,13 @@ if __name__ == "__main__":
             except KeyError:
                 print("Invalid argument. Must be one of " + str(["horizontal","vertical"]) + ".")
             quit()
-        raise KeyError
 
+        if argv[1] == "stick":
+            stick()
+            quit()
+
+        raise KeyError
     except IndexError:
-        print("No function given. Must be one of " + str(["gravity", "travel", "split"]))
+        print("No function given. Must be one of " + str(["gravity", "travel", "split", "stick"]))
     except KeyError:
-        print("Function not supported. Must be one of " + str(["gravity", "travel", "split"]))
+        print("Function not supported. Must be one of " + str(["gravity", "travel", "split", "stick"]))

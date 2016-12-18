@@ -1,5 +1,3 @@
-from math import floor
-from time import sleep
 from operator import sub,add
 
 from funcs.util import *
@@ -24,9 +22,9 @@ def closeEnough(x, y):
 
 def split(DIM):
     display,offset = getWorkingArea()
-    mouse = list(map(add,map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]),offset))
-    desktop_n = call("xdotool get_desktop")
-    all_windows = [int(x[0],0) for x in [x.split() for x in call("wmctrl -l").split("\n")] if x[1] == desktop_n]
+    mouse = tuple(map(add,getMousePosition(),offset))
+
+    all_windows = getAllDesktopWindows()
 
     window_list = []
     for window in all_windows:
