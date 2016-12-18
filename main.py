@@ -12,7 +12,9 @@ import re
 from sys import argv
 from funcs.gravity import *
 from funcs.travel import *
+from funcs.split import *
 from funcs.util import *
+
 
 GEO = {
         "video_top"   :[(68,  0, 32, 33), (80,  0, 20, 21), (50,  0, 50, 50)],
@@ -30,8 +32,11 @@ BAR = (   0,  25)
 
 if __name__ == "__main__":
     if argv[1] == "gravity":
-        gravity(GEO[argv[2]],OFF, BAR)
+        gravity(GEO[argv[2]], OFF, BAR)
         quit()
     if argv[1] == "travel":
         travel(argv[2])
+        quit()
+    if argv[1] == "split":
+        split(argv[2], OFF, BAR)
         quit()

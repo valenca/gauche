@@ -11,45 +11,40 @@ def travel(d):
             "down"  : (    2, False, False)
             }[d]
 
-    n = call("xdotool get_desktop")
-    o = call("wmctrl -l").split("\n")
-
-    o = [x.split() for x in o ]
-
-    l = [int(x[0],0) for x in o if x[1] == n]
+    desktop_n = call("xdotool get_desktop")
+    all_windows = [int(x[0],0) for x in [x.split() for x in call("wmctrl -l").split("\n")] if x[1] == desktop_n]
     
-    c = int(call("xdotool getwindowfocus"))
+    current_window = int(call("xdotool getwindowfocus"))
 
-    m = [-1] + list(map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]))
+    mouse = [-1] + list(map(lambda x: int(x[2:]), call("xdotool getmouselocation").split()[:2]))
     
-    a = []
-    for w in l:
-        o = call("xdotool getwindowgeometry %d" % w)
-        o = o.split("\n")
-        p = tuple(map(int, o[1].split()[1].split(",")))
-        g = tuple(map(int, o[2].split()[1].split("x")))
+    window_list = []
+    for window in all_windows:
+        output = call("xdotool getwindowgeometry %d" % window).split("\n")
+        pos = tuple(map(int, output[1].split()[1].split(",")))
+        geo = tuple(map(int, output[2].split()[1].split("x")))
         
-        a.append([w, p[0]+(g[0]//2), p[1]+(g[1]//2)])
+        window_list.append([window, pos[0]+(geo[0]//2), pos[1]+(geo[1]//2)])
     
-        if w==c:
-            c=a[-1]
+        if window==current_window:
+            current_window=window_list[-1]
 
-    for i in range(len(a)):
-        a[i].append(dist(m[1],a[i][1],m[2],a[i][2]))
+    for i in range(len(window_list)):
+        window_list[i].append(dist(mouse[1],window_list[i][1],mouse[2],window_list[i][2]))
     
-    a.sort(key=itemgetter(3))
+    window_list.sort(key=itemgetter(3))
    
-    t=[]
-    for i in range(len(a)):
-        if abs(a[i][d[0]] - m[d[0]]) < 5: # Rounding threshold
+    travel=[]
+    for i in range(len(window_list)):
+        if abs(window_list[i][d[0]] - mouse[d[0]]) < 5: # Rounding threshold
             continue
-        if abs(a[i][d[0]] - c[d[0]]) < 5:
+        if abs(window_list[i][d[0]] - current_window[d[0]]) < 5:
             continue
-        if (a[i][d[0]] > m[d[0]]) != d[1]:
-            if (abs(a[i][1]-m[1])>abs(a[i][2]-m[2]))==d[2]:
-                call("xdotool mousemove %d %d" % tuple(a[i][1:3]))
+        if (window_list[i][d[0]] > mouse[d[0]]) != d[1]:
+            if (abs(window_list[i][1]-mouse[1])>abs(window_list[i][2]-mouse[2]))==d[2]:
+                call("xdotool mousemove %d %d" % tuple(window_list[i][1:3]))
                 return
-            elif t==[]:
-                t=a[i]
-    if t!=[]:
-        call("xdotool mousemove %d %d" % tuple(t[1:3]))
+            elif travel==[]:
+                travel=window_list[i]
+    if travel!=[]:
+        call("xdotool mousemove %d %d" % tuple(travel[1:3]))

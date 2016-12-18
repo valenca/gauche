@@ -4,17 +4,17 @@ from operator import sub,add
 
 from funcs.util import *
 
-def relativeP(x, d, o):
-    return (x[0] - o[0]) * 100 / d[0], (x[1] - o[1]) * 100 / d[1]
+def relativeP(x, display, offset):
+    return (x[0] - offset[0]) * 100 / display[0], (x[1] - offset[1]) * 100 / display[1]
          
-def absoluteP(x, d, o):
-    return (x[0] * d[0] / 100) + o[0], (x[1] * d[1] / 100) + o[1]
+def absoluteP(x, display, offset):
+    return (x[0] * display[0] / 100) + offset[0], (x[1] * display[1] / 100) + offset[1]
                    
-def relativeG(x, d, o): 
-    return x[0] * 100 / d[0], x[1] * 100 / d[1]
+def relativeG(x, display, offset): 
+    return x[0] * 100 / display[0], x[1] * 100 / display[1]
 
-def absoluteG(x, d, o): 
-    return x[0] * d[0] / 100, x[1] * d[1] / 100
+def absoluteG(x, display, offset): 
+    return x[0] * display[0] / 100, x[1] * display[1] / 100
 
 
 def closeEnough(x, y):
@@ -25,36 +25,32 @@ def closeEnough(x, y):
     return -1
 
 def gravity(GEO, OFF, BAR):
-    o = tuple(map(add,OFF,BAR))
-
-    d = call("xdotool getdisplaygeometry")
-    d = list(map(sub,map(int, d.split()), BAR))
-
-    w = call("xdotool getwindowfocus")
-    l = call("xdotool getwindowgeometry %s" % w)
-    w, p, g = l.split("\n")
-
-    w = int(w.split()[1])
-    p = relativeP(tuple(map(int, p.split()[1].split(','))), d, o)
-    g = relativeG(tuple(map(int, g.split()[1].split('x'))), d, o)
+    offset = tuple(map(add,OFF,BAR))
+    display = list(map(sub,map(int, call("xdotool getdisplaygeometry").split()), BAR))
+    window, pos, geo = call("xdotool getwindowgeometry %s" % call("xdotool getwindowfocus")).split("\n")
+    
+    window = int(window.split()[1])
+    pos = relativeP(tuple(map(int, pos.split()[1].split(','))), display, offset)
+    geo = relativeG(tuple(map(int, geo.split()[1].split('x'))), display, offset)
  
-    k = tuple(map(int, map(round, p + g)))
+    grav = tuple(map(int, map(round, pos + geo)))
 
-    t = closeEnough(k, GEO)
+    tog = closeEnough(grav, GEO)
 
-    if t == -1:
-        k = GEO[0]
-        print("gravity not found, defaulting to %s" % str(k))
+    if tog == -1:
+        grav = GEO[0]
+        print("gravity not found, defaulting to %s" % str(grav))
     else:
-        k = GEO[(t + 1) % len(GEO)]
-        print("gravity found, setting to %s" % str(k))
+        grav = GEO[(tog + 1) % len(GEO)]
+        print("gravity found, setting to %s" % str(grav))
 
-    p = absoluteP(k[:2], d, o)
-    g = absoluteG(k[2:], d, o)
+    pos = absoluteP(grav[:2], display, offset)
+    geo = absoluteG(grav[2:], display, offset)
  
 
-    l = call("xdotool windowsize %d %d %d --sync" % (w, g[0], g[1]))
-    l = call("xdotool windowmove %d %d %d --sync" % (w, p[0], p[1]))
-    sleep(0.02)
-    l = call("xdotool mousemove %d %d" % (p[0] + g[0] / 2, p[1] + g[1] / 2 ))
+    last = call("xdotool windowsize %d %d %d --sync" % (window, geo[0], geo[1]))
+    last = call("xdotool windowmove %d %d %d --sync" % (window, pos[0], pos[1]))
+    sleep(0.01)
+    sleep(0.01)
+    last = call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
 
