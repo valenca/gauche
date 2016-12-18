@@ -20,5 +20,6 @@ def call(exe):
         return ret
     else:
         return next(runProcess(exe)).decode('utf-8').strip("\n")
+        
 def dist(x1, x2, y1, y2):
     return sqrt((x1-x2)**2+(y1-y2)**2)

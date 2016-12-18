@@ -7,8 +7,6 @@ from funcs.util import *
 def full(window, display, offset):
     return closeEnough(window[2], display[0]) and closeEnough(window[4], display[1]) and closeEnough(window[1],offset[0]) and closeEnough(window[3],offset[1])
 
-
-
 def left(window, display, offset):
     return closeEnough(window[1], offset[0]) and closeEnough(window[3], offset[1]) and closeEnough(window[4], display[1])
 
@@ -20,8 +18,6 @@ def right(window, display, offset):
 
 def bottom(window, display, offset):
     return closeEnough(window[3] + window[4], display[1] + offset[1]) and closeEnough(window[1], offset[0]) and closeEnough(window[2], display[0])
-
-
 
 def closeEnough(x, y):
     return abs(x-y) < 3
