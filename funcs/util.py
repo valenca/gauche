@@ -4,29 +4,15 @@ from operator import add
 
 DEBUG = True
 
-def runProcess(exe):
-    p = Popen(exe.split(), stdout=PIPE, stderr=STDOUT)
-    while(True):
-        retcode = p.poll()
-        line = p.stdout.read()
-        yield line
-        if(retcode is not None):
-            break
-
 def call(exe):
-    if(DEBUG):
-        print("CMD \'%s\':" % exe)
-        ret = next(runProcess(exe)).decode('utf-8').strip("\n")
-        print(ret.split("\n"))
-        return ret
-    else:
-        return next(runProcess(exe)).decode('utf-8').strip("\n")
-        
+    return Popen(exe,stdout=PIPE,shell=True).stdout.read().decode("utf-8").strip()
+
 def dist(x1, x2, y1, y2):
     return sqrt((x1-x2)**2+(y1-y2)**2)
 
 def getWorkingArea():
-    OFF,BAR,SCR = [[i for i in call("wmctrl -d").split("\n") if i[3] == '*'][0].split()[x] for x in (5,7,8)]
+    OFF,BAR = call("wmctrl -d | grep \\* | grep -o '[0-9]*,[0-9]*'").split("\n")
+    SCR     = call("wmctrl -d | grep \\* | grep -o '[0-9]*x[0-9]*'").split("\n")[1]
 
     SCR = tuple(map(int,SCR.split("x")))
     OFF = tuple(map(int,OFF.split(",")))
@@ -39,6 +25,16 @@ def getMousePosition():
 
 def getCurrentWindow():
     return int(call("xdotool getwindowfocus"))
+    """
+    a = "0x%08x" % int(call("xdotool getwindowfocus"))
+    print(a)
+    return a
+    """
 
 def getAllDesktopWindows():
     return [int(x[0],0) for x in [x.split() for x in call("wmctrl -l").split("\n")] if (x[1] == call("xdotool get_desktop") or x[3][:3] == "[*]")]
+    """
+    a=call("wmctrl -l | awk '$2 == 1 || /[\\*]/ {print $1}'").split("\n")
+    print(a)
+    return a
+    """

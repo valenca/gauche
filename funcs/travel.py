@@ -20,13 +20,14 @@ def travel(d):
     
     window_list = []
     for window in all_windows:
-        output = call("xdotool getwindowgeometry %d" % window).split("\n")
+        output = call("xdotool getwindowgeometry %s" % window).split("\n")
         pos = tuple(map(int, output[1].split()[1].split(",")))
         geo = tuple(map(int, output[2].split()[1].split("x")))
         
         window_list.append([window, pos[0] + (geo[0] // 2), pos[1] + (geo[1] // 2)])
     
         if window == current_window:
+            print("here")
             current_window = window_list[-1]
 
     for i in range(len(window_list)):
