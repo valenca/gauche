@@ -24,7 +24,6 @@ def closeEnough(x, y):
     return None
 
 def gravity(GEO):
-
     display, offset = getWorkingArea()
     window, pos, geo = call("xdotool getwindowgeometry %s" % call("xdotool getwindowfocus")).split("\n")
     
@@ -36,10 +35,10 @@ def gravity(GEO):
 
     try:
         grav = GEO[(closeEnough(grav, GEO) + 1) % len(GEO)]
-        print("gravity found, setting to %s" % str(grav))
+        if DEBUG: print("gravity found, setting to %s" % str(grav))
     except TypeError:
         grav = GEO[0]
-        print("gravity not found, defaulting to %s" % str(grav))
+        if DEBUG: print("gravity not found, defaulting to %s" % str(grav))
 
     pos = tuple(map(round,absoluteP(grav[:2], display, offset)))
     geo = tuple(map(round,absoluteG(grav[2:], display, offset)))

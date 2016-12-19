@@ -4,7 +4,7 @@ from itertools import groupby
 from funcs.util import *
 
 def closeEnough(x,y):
-    return abs(x - y) < 3
+    return abs(x - y) < 5
 
 def travel(d):
     d = {              #AVPos  Sign  Horiz
@@ -14,8 +14,8 @@ def travel(d):
             "down"  : (    2, False, False)
             }[d]
 
-    mouse  = [-1] + getMousePosition()
-    all_windows    = getAllDesktopWindows()    
+    mouse  = [-1]  + getMousePosition()
+    all_windows    = getAllDesktopWindows()
     current_window = getCurrentWindow()
     
     window_list = []
@@ -27,7 +27,6 @@ def travel(d):
         window_list.append([window, pos[0] + (geo[0] // 2), pos[1] + (geo[1] // 2)])
     
         if window == current_window:
-            print("here")
             current_window = window_list[-1]
 
     for i in range(len(window_list)):
@@ -37,7 +36,7 @@ def travel(d):
    
     travel = []
     for i in range(len(window_list)):
-        if closeEnough(window_list[i][d[0]], mouse[d[0]]): # Rounding threshold
+        if closeEnough(window_list[i][d[0]], mouse[d[0]]): 
             continue
         if closeEnough(window_list[i][d[0]], current_window[d[0]]):
             continue
