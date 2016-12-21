@@ -38,4 +38,4 @@ def getCurrentDeskstop():
     return call("wmctrl -d | awk '$2 == \"*\" {print $1}'")
 
 def getAllDesktopWindows(DSK = getCurrentDeskstop()):
-    return call("wmctrl -l | grep -v Desktop | awk '$2 == %s || /\\[\\*\\]/ {print $1}'" % DSK).split("\n")
+    return call("wmctrl -l | grep -v 'Desktop$' | awk '$2 == %s || /\\[\\*\\]/ {print $1}'" % DSK).split("\n")
