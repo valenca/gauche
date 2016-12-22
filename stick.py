@@ -1,4 +1,4 @@
-from funcs.util import *
+from util import *
 from re import escape
 
 def stick():

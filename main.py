@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env python
 #   For best performance remove window titles.
 #   Install devilspie with the script: 
 # 
@@ -11,11 +10,11 @@ import re
 from sys import argv
 from operator import itemgetter
 
-from funcs.gravity import *
-from funcs.travel import *
-from funcs.split import *
-from funcs.stick import *
-from funcs.util import *
+from gravity import *
+from travel import *
+from split import *
+from stick import *
+from util import *
 
 GEO = {
         "video_top"   :[(68,  0, 32, 33), (80,  0, 20, 21), (50,  0, 50, 50)],

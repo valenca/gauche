@@ -1,7 +1,7 @@
 from time import sleep
 from operator import sub,add
 
-from funcs.util import *
+from util import *
 
 def relativeP(x, display, offset):
     return (x[0] - offset[0]) * 100 / display[0], (x[1] - offset[1]) * 100 / display[1]

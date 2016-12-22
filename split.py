@@ -1,6 +1,6 @@
 from operator import sub,add
 
-from funcs.util import *
+from util import *
 
 def full(window, display, offset):
     return closeEnough(window[3], offset[1]) and closeEnough(window[4], display[1]) and closeEnough(window[1], offset[0]) and closeEnough(window[2],display[0])

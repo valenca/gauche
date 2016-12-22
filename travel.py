@@ -1,7 +1,7 @@
 from operator import itemgetter
 from itertools import groupby
 
-from funcs.util import *
+from util import *
 
 def closeEnough(x,y):
     return abs(x - y) < 5
