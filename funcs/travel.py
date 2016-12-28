@@ -6,18 +6,19 @@ from funcs.util import *
 def closeEnough(x,y):
     return abs(x - y) < 5
 
-def travel(d):
-    d = {              #AVPos  Sign  Horiz
+def travel(direction):
+    direction = {              #AVPos  Sign  Horiz
             "left"  : (    1,  True,  True),
             "right" : (    1, False,  True),
             "up"    : (    2,  True, False),
             "down"  : (    2, False, False)
-            }[d]
+            }[direction]
 
     mouse  = [-1]  + getMousePosition()
     all_windows    = getAllDesktopWindows()
     current_window = getCurrentWindow()
-    
+
+    toggle = False
     window_list = []
     for window in all_windows:
         output = call("xdotool getwindowgeometry %s" % window).split("\n")
@@ -28,6 +29,7 @@ def travel(d):
     
         if window == current_window:
             current_window = window_list[-1]
+            toggle = True
 
     for i in range(len(window_list)):
         window_list[i].append(dist(mouse[1], window_list[i][1], mouse[2], window_list[i][2]))
@@ -36,12 +38,12 @@ def travel(d):
    
     travel = []
     for i in range(len(window_list)):
-        if closeEnough(window_list[i][d[0]], mouse[d[0]]): 
+        if closeEnough(window_list[i][direction[0]], mouse[direction[0]]): 
             continue
-        if closeEnough(window_list[i][d[0]], current_window[d[0]]):
+        if toggle and closeEnough(window_list[i][direction[0]], current_window[direction[0]]):
             continue
-        if (window_list[i][d[0]] > mouse[d[0]]) != d[1]:
-            if (abs(window_list[i][1] - mouse[1]) > abs(window_list[i][2] - mouse[2])) == d[2]:
+        if (window_list[i][direction[0]] > mouse[direction[0]]) != direction[1]:
+            if (abs(window_list[i][1] - mouse[1]) > abs(window_list[i][2] - mouse[2])) == direction[2]:
                 call("xdotool mousemove %d %d" % tuple(window_list[i][1:3]))
                 return
             elif travel == []:
