@@ -25,7 +25,7 @@ def closeEnough(x, y):
 
 def gravity(GEO):
     display, offset = getWorkingArea()
-    window, pos, geo = call("xdotool getwindowgeometry %s" % call("xdotool getwindowfocus")).split("\n")
+    window, pos, geo = call("xdotool getwindowgeometry $(xdotool getwindowfocus)").split("\n")
     
     window = int(window.split()[1])
     pos = relativeP(tuple(map(int, pos.split()[1].split(','))), display, offset)
@@ -43,6 +43,6 @@ def gravity(GEO):
     pos = tuple(map(round,absoluteP(grav[:2], display, offset)))
     geo = tuple(map(round,absoluteG(grav[2:], display, offset)))
  
-    last = call("wmctrl -i -r %d -e 0,%d,%d,%d,%d" % (window, pos[0], pos[1], geo[0], geo[1]))
-    last = call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
+    call("wmctrl -i -r %d -e 0,%d,%d,%d,%d" % (window, pos[0], pos[1], geo[0], geo[1]))
+    call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
 

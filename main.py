@@ -15,6 +15,7 @@ from funcs.gravity import *
 from funcs.travel import *
 from funcs.split import *
 from funcs.stick import *
+from funcs.pages import *
 from funcs.util import *
 
 GEO = {
@@ -33,6 +34,15 @@ if __name__ == "__main__":
         if argv[1] == "gravity":
             try:
                 gravity(GEO[argv[2]])
+            except IndexError:
+                print(     "No gravity given. Must be one of:\n" + str(list(GEO.keys())))
+            except KeyError:
+                print("Gravity not supported. Must be one of:\n" + str(list(GEO.keys())))
+            quit()
+
+        if argv[1] == "pages":
+            try:
+                pages(GEO.values())
             except IndexError:
                 print(     "No gravity given. Must be one of:\n" + str(list(GEO.keys())))
             except KeyError:

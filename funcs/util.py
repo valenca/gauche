@@ -2,7 +2,7 @@ from subprocess import Popen,PIPE,STDOUT
 from math import sqrt
 from operator import add,sub
 
-DEBUG = False
+DEBUG = True
 
 def call(EXE):
     OUT = Popen(EXE, stdout = PIPE, shell = True).stdout.read().decode("utf-8").strip()
