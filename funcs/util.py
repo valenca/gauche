@@ -13,7 +13,7 @@ def dist(x1, x2, y1, y2):
     return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 def getScreens():
-    return [tuple(map(int, i.split())) for i in call("xrandr | grep -o '[0-9]\+x[0-9]\++[0-9]\++[0-9]\+' | sed -E s/'[x|+]'/'\ '/g").split("\n")]
+    return [tuple(map(int, i.split())) for i in call("xrandr --current | grep -o '[0-9]\+x[0-9]\++[0-9]\++[0-9]\+' | sed -E s/'[x|+]'/'\ '/g").split("\n")]
 
 def getWorkingArea():
     BAR = [(0, 25),(0,0),(0,0)]

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 #   For best performance remove window titles.
 #   Install devilspie with the script: 
@@ -24,7 +24,8 @@ GEO = {
 
         "left"        :[(0 ,  0,100,100), ( 0,  0, 50,100), ( 0,  0, 67,100), ( 0,  0, 33,100)],
         "right"       :[(50,  0, 50,100), (67,  0, 33,100), (33,  0, 67,100)],
-        "column"      :[(92,  0,  8,100)]
+        "column"      :[(92,  0,  8,100)],
+        "terminal"    :[(0,   0,100, 80)]
 }
 
 if __name__ == "__main__":
