@@ -43,6 +43,7 @@ def gravity(GEO):
     pos = tuple(map(round,absoluteP(grav[:2], display, offset)))
     geo = tuple(map(round,absoluteG(grav[2:], display, offset)))
  
-    call("wmctrl -i -r %d -e 0,%d,%d,%d,%d" % (window, pos[0], pos[1], geo[0], geo[1]))
+    call("wmctrl -i -r %d -b remove,fullscreen" % (window))
+    call("wmctrl -F -i -r %d -e 0,%d,%d,%d,%d" % (window, pos[0], pos[1], geo[0], geo[1]))
     call("xdotool mousemove %d %d" % (pos[0] + geo[0] / 2, pos[1] + geo[1] / 2 ))
 
