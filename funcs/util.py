@@ -4,6 +4,12 @@ from operator import add,sub
 
 DEBUG = True
 
+GAP = [
+    [  0,  0,  0,  0],
+    [380, 45, 45, 45],
+    [  0,  0,  0,  0]
+]
+
 def call(EXE):
     OUT = Popen(EXE, stdout = PIPE, shell = True).stdout.read().decode("utf-8").strip()
     if DEBUG: print(EXE,"\n",OUT)
@@ -13,7 +19,19 @@ def dist(x1, x2, y1, y2):
     return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
 def getScreens():
-    return [tuple(map(int, i.split())) for i in call("xrandr --current | grep -o '[0-9]\+x[0-9]\++[0-9]\++[0-9]\+' | sed -E s/'[x|+]'/'\ '/g").split("\n")]
+    screens = [list(map(int, i.split())) for i in call("xrandr --current | grep -o '[0-9]\+x[0-9]\++[0-9]\++[0-9]\+' | sed -E s/'[x|+]'/'\ '/g").split("\n")]
+
+    if 'GAP' in globals():
+        for screen in range(len(screens)):
+            gap = GAP[screen]
+            screens[screen] = [
+                screens[screen][0] - gap[0] - gap[1],
+                screens[screen][1] - gap[2] - gap[3],
+                screens[screen][2] + gap[0],
+                screens[screen][3] + gap[2],
+            ]
+
+    return screens
 
 def getWorkingArea():
     BAR = [(0, 25),(0,0),(0,0)]
